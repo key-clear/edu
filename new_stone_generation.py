@@ -11,7 +11,7 @@ username = 'admin'
 pwd = 'admin'
 # server address
 server = 'http://161.202.180.220:9092'
-server = 'http://127.0.0.1:8080'
+#server = 'http://127.0.0.1:8080'
 
 sock_common = xmlrpclib.ServerProxy(server + '/xmlrpc/common')
 sock = xmlrpclib.ServerProxy(server + '/xmlrpc/object')
