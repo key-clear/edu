@@ -47,20 +47,37 @@ def add_stone(row, stone):
         product_id = ""
     else:
         product_id = product_id[0]
+    # stone_id_data = sock.execute(dbname, uid, pwd, 'product.stone', 'search', [('master_id', '=', master_style_id), ('product_id', '=', product_id), ('stone_seive_size', '=', row[4].value), ('stone_wt', '=', row[8].value), ('stone_ct', '=', row[7].value), ('stone_setting', '=', setting)])
+    # if not stone_id_data:
+    #     stone_ids = {
+    #          'master_id': master_style_id,
+    #          'product_id': product_id,
+    #          'stone_seive_size': row[4].value,
+    #          'stone_qty': row[6].value,
+    #          'stone_uom': 1,
+    #          'stone_wt': row[8].value,
+    #          'stone_ct': row[7].value,
+    #          'stone_setting': setting,
+    #      }
+    #     print "=======stone ids----->", sock.execute(dbname, uid, pwd, 'product.stone', 'create', stone_ids)
+    if master_style_id:
+        style_product = sock.execute(dbname, uid, pwd, 'style.product', 'search', [('product_id', '=', master_style_id), ('is_master', '=', False)])
+        # print "=====", style_product
+        for style in style_product:
+            stone_id_data = sock.execute(dbname, uid, pwd, 'product.stone', 'search', [('style_id', '=', style), ('product_id', '=', product_id), ('stone_seive_size', '=', row[4].value), ('stone_wt', '=', row[8].value), ('stone_ct', '=', row[7].value), ('stone_setting', '=', setting)])
+            if not stone_id_data:
+                stone_ids = {
+                     'style_id': style,
+                     'product_id': product_id,
+                     'stone_seive_size': row[4].value,
+                     'stone_qty': row[6].value,
+                     'stone_uom': 1,
+                     'stone_wt': row[8].value,
+                     'stone_ct': row[7].value,
+                     'stone_setting': setting,
+                 }
+                print "=======stone ids----->", sock.execute(dbname, uid, pwd, 'product.stone', 'create', stone_ids)
 
-    stone_id_data = sock.execute(dbname, uid, pwd, 'product.stone', 'search', [('master_id', '=', master_style_id), ('product_id', '=', product_id), ('stone_seive_size', '=', row[4].value), ('stone_wt', '=', row[8].value), ('stone_ct', '=', row[7].value), ('stone_setting', '=', setting)])
-    if not stone_id_data:
-        stone_ids = {
-             'master_id': master_style_id,
-             'product_id': product_id,
-             'stone_seive_size': row[4].value,
-             'stone_qty': row[6].value,
-             'stone_uom': 1,
-             'stone_wt': row[8].value,
-             'stone_ct': row[7].value,
-             'stone_setting': setting,
-         }
-        print "=======stone ids----->", sock.execute(dbname, uid, pwd, 'product.stone', 'create', stone_ids)
 
 while curr_row < num_rows:
     curr_row += 1
