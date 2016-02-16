@@ -6,12 +6,12 @@ import xlrd
 
 # database name as per changes
 dbname = 'fusion_2_15'
-# dbname = 'jc16'
+# dbname = 'jc17'
 username = 'admin'
 pwd = 'admin'
 # server address
 server = 'http://161.202.180.220:9092'
-#server = 'http://127.0.0.1:8080'
+# server = 'http://127.0.0.1:8069'
 
 sock_common = xmlrpclib.ServerProxy(server + '/xmlrpc/common')
 sock = xmlrpclib.ServerProxy(server + '/xmlrpc/object')
@@ -41,25 +41,24 @@ def add_stone(row, stone):
         master_style_id = ""
     else:
         master_style_id = master_style_id[0]
-
     product_id = sock.execute(dbname, uid, pwd, 'style.product', 'search', [('name', '=', stone), ('category', '=', 'stone')])
     if not product_id:
         product_id = ""
     else:
         product_id = product_id[0]
-    # stone_id_data = sock.execute(dbname, uid, pwd, 'product.stone', 'search', [('master_id', '=', master_style_id), ('product_id', '=', product_id), ('stone_seive_size', '=', row[4].value), ('stone_wt', '=', row[8].value), ('stone_ct', '=', row[7].value), ('stone_setting', '=', setting)])
-    # if not stone_id_data:
-    #     stone_ids = {
-    #          'master_id': master_style_id,
-    #          'product_id': product_id,
-    #          'stone_seive_size': row[4].value,
-    #          'stone_qty': row[6].value,
-    #          'stone_uom': 1,
-    #          'stone_wt': row[8].value,
-    #          'stone_ct': row[7].value,
-    #          'stone_setting': setting,
-    #      }
-    #     print "=======stone ids----->", sock.execute(dbname, uid, pwd, 'product.stone', 'create', stone_ids)
+    stone_id_data = sock.execute(dbname, uid, pwd, 'product.stone', 'search', [('master_id', '=', master_style_id), ('product_id', '=', product_id), ('stone_seive_size', '=', row[4].value), ('stone_wt', '=', row[8].value), ('stone_ct', '=', row[7].value), ('stone_setting', '=', setting)])
+    if not stone_id_data:
+        stone_ids = {
+             'master_id': master_style_id,
+             'product_id': product_id,
+             'stone_seive_size': row[4].value,
+             'stone_qty': row[6].value,
+             'stone_uom': 1,
+             'stone_wt': row[8].value,
+             'stone_ct': row[7].value,
+             'stone_setting': setting,
+         }
+        print "=======stone ids----->", sock.execute(dbname, uid, pwd, 'product.stone', 'create', stone_ids)
     if master_style_id:
         style_product = sock.execute(dbname, uid, pwd, 'style.product', 'search', [('product_id', '=', master_style_id), ('is_master', '=', False)])
         # print "=====", style_product
@@ -109,7 +108,7 @@ while curr_row < num_rows:
                 add_stone(row, stone)
                 # print "6==>", curr_row, row[4].value, stone
             elif row[4].value in ['4.5-5', '4-4.5']:
-                stone = row[1].value + " " + row[2].value + " " + row[3].value + " " + "2.5-3"
+                stone = row[1].value + " " + row[2].value + " " + row[3].value + " " + "4.5-5"
                 add_stone(row, stone)
                 # print "7==>", curr_row, row[4].value, stone
             elif row[4].value in ['5.5-6', '5-5.5', '6-6.5']:
